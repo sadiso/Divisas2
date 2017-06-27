@@ -1,25 +1,26 @@
-﻿using Divisas2.Controls;
-using Divisas2.Models;
-using GalaSoft.MvvmLight.Command;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.Forms;
-
-namespace Divisas2.ViewModels
+﻿namespace Divisas2.ViewModels
 {
+    using Models;
+    using Services;
+    using GalaSoft.MvvmLight.Command;
+    using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Net.Http;
+    using System.Reflection;
+    using System.Windows.Input;
     public class MainViewModel : INotifyPropertyChanged
     {
         #region Attributes
         private ExchangeRates exchangeRates;
+
+        private ApiService apiService;
+
+        private DialogService dialogService;
+
+        private DataService dataService;
 
         private decimal amount;
 
@@ -45,7 +46,7 @@ namespace Divisas2.ViewModels
         #region Properties
         public ObservableCollection<Rate> Rates { get; set; }
 
-        Dictionary<string, string> MoneyDescription;
+        public Dictionary<string, string> MoneyDescription;
         public decimal Amount
         {
             set
@@ -173,8 +174,13 @@ namespace Divisas2.ViewModels
         {
             Rates = new ObservableCollection<Rate>();
             MoneyDescription = new Dictionary<string, string>();
-            IsEnabled = false;
+            apiService = new ApiService();
+            dataService = new DataService();
+            dialogService = new DialogService();
+
+            IsEnabled = true;
             Message = "Ingrese la cantidad a convertir, la moneda orgien, la monda destino y presione el botón de 'Convertir'";
+
             GetRates();
             GetRatesDescription();
         }
@@ -226,7 +232,7 @@ namespace Divisas2.ViewModels
                 IsEnabled = false;
                 return;
             }
-            
+            dataService.DeleteAllAndInsert<Rates>(exchangeRates.Rates,"Rates.db3");
             IsRunning = false;
             IsEnabled = true;
         }
@@ -257,9 +263,25 @@ namespace Divisas2.ViewModels
                 return;
             }
 
+            dataService.DeleteAllAndInsert<Dictionary<string, string>>(MoneyDescription, "MoneyDescription.db3");
             LoadRates();
             IsRunning = false;
             IsEnabled = true;
+        }
+
+        private async void CheckConnection()
+        {
+            IsRunning = true;
+            IsEnabled = false;
+
+            var checkConnetion = await apiService.CheckConnection();
+            if (!checkConnetion.IsSuccess)
+            {
+                IsRunning = false;
+                IsEnabled = true;
+                await dialogService.ShowMessage("Error", checkConnetion.Message);
+                return;
+            }            
         }
         #endregion
 

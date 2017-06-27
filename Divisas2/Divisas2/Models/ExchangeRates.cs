@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -201,12 +202,20 @@ namespace Divisas2.Models
     }
     public class Rate
     {
+        [PrimaryKey]
+        [AutoIncrement]
+        public int CodeId { get; set; }
         public string Code { get; set; }
         public string Descripcion { get; set; }
         public double TaxRate { get; set; }
         public string MoneyNameFull
         {
             get { return string.Format("{0} - {1}", Code, Descripcion); }
+        }
+
+        public override int GetHashCode()
+        {
+            return CodeId;
         }
     }
     
