@@ -9,6 +9,17 @@
         <ScrollView>
             <StackLayout 
                 Padding="8">
+                <StackLayout
+                    Orientation="Horizontal">
+                    <Label
+                        Text="{Binding StatusDescription}"
+                        HorizontalOptions="Start">
+                    </Label>
+                    <Image 
+                        Source="{Binding ConnectionStatus}"
+                        HorizontalOptions="EndAndExpand">
+                    </Image>
+                </StackLayout>
                 <Label 
                     Text="Valor a convertir:">
                 </Label>

@@ -208,6 +208,7 @@ namespace Divisas2.Models
         public string Code { get; set; }
         public string Descripcion { get; set; }
         public double TaxRate { get; set; }
+        public int Selected { get; set; }
         public string MoneyNameFull
         {
             get { return string.Format("{0} - {1}", Code, Descripcion); }

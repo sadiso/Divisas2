@@ -6,11 +6,11 @@
     using Data;
     public class DataService
     {
-        public T DeleteAllAndInsert<T>(T model, string DBName) where T : class
+        public T DeleteAllAndInsert<T>(T model) where T : class
         {
             try
             {
-                using (var da = new DataAccess(DBName))
+                using (var da = new DataAccess())
                 {
                     var oldRecords = da.GetList<T>(false);
                     foreach (var oldRecord in oldRecords)

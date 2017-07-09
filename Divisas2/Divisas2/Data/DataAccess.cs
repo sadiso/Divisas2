@@ -12,17 +12,14 @@
     {
         private SQLiteConnection connection;
         private IConfig config;
-
+        
         public DataAccess()
-        {
-            
-        }
-        public DataAccess(string DBName)
         {
             config = DependencyService.Get<IConfig>();
             connection = new SQLiteConnection(config.Platform,
-                System.IO.Path.Combine(config.DirectoryDB, DBName));
-            DBCreate(DBName);
+            System.IO.Path.Combine(config.DirectoryDB, "Divisas2.db3"));
+            connection.CreateTable<Rate>();
+            
         }
 
         public void DBCreate(string DBName)

@@ -40,6 +40,7 @@
     </Compile>
     <Compile Include="Controls\BindablePicker.cs" />
     <Compile Include="Data\DataAccess.cs" />
+    <Compile Include="Helpers\AsyncHelpers.cs" />
     <Compile Include="Infrastructure\InstanceLocator.cs" />
     <Compile Include="Interfaces\IConfig.cs" />
     <Compile Include="Models\ExchangeRates.cs" />
